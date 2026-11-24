@@ -6,5 +6,6 @@
     <Project Path="src/BankAccount.Infrastructure/BankAccount.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/BankAccount.UnitTests/BankAccount.UnitTests.csproj" />
   </Folder>
 </Solution>

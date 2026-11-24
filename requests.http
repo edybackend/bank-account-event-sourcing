@@ -1,0 +1,40 @@
+# Try the API from Visual Studio, Rider or VS Code (REST Client). Start it with `docker compose up --build`.
+@bank = http://localhost:8080
+
+### Open an account
+# @name open
+POST {{bank}}/api/accounts
+Content-Type: application/json
+
+{ "owner": "Ana Souza", "currency": "BRL" }
+
+###
+@id = {{open.response.body.$.accountId}}
+
+### Deposit
+POST {{bank}}/api/accounts/{{id}}/deposits
+Content-Type: application/json
+
+{ "amount": 1500.00, "description": "Salary" }
+
+### Withdraw (try more than the balance to see 422)
+POST {{bank}}/api/accounts/{{id}}/withdrawals
+Content-Type: application/json
+
+{ "amount": 200.00, "description": "ATM" }
+
+### Read model: summary and statement
+GET {{bank}}/api/accounts/{{id}}
+
+###
+GET {{bank}}/api/accounts/{{id}}/statement
+
+### The raw event stream
+GET {{bank}}/api/accounts/{{id}}/events
+
+### All accounts (the sample data has six weeks of history)
+GET {{bank}}/api/accounts
+
+### Balance at a past moment: replays the stream up to "at".
+# The account opened above did not exist yet on that date (404). Paste a sample account id to see an older balance.
+GET {{bank}}/api/accounts/{{id}}/balance?at=2026-01-01T00:00:00Z

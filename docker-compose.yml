@@ -1,0 +1,15 @@
+name: bank-account-event-sourcing
+
+services:
+  bank:
+    build:
+      context: .
+    image: bank-account-event-sourcing:local
+    ports:
+      - "8080:8080" # API reference: http://localhost:8080/scalar
+    volumes:
+      - bank-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  bank-data:

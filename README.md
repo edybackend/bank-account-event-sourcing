@@ -8,8 +8,6 @@ truth: every deposit, withdrawal and transfer is an event, the account is rebuil
 read from projections updated in the same transaction. Because the history is the data, the API can also answer
 *"what was the balance on October 15?"*.
 
-Small on purpose: it can be read in about 15 minutes and started with one command.
-
 ## Quick start
 
 Requirements: Docker.
@@ -137,16 +135,9 @@ dotnet test   # aggregate given/when/then, integration (real API + SQLite, concu
 - **Synchronous projections.** Simple and consistent, but a slow projection slows the command. At scale they would run asynchronously from the event log, with eventual consistency.
 - **SQLite.** Chosen so the project runs with no external database; production would use PostgreSQL or a dedicated event store.
 
-## AI-Assisted Engineering
+## Working with an AI agent
 
-This project was built with Claude Code under explicit engineering controls:
-
-- **Project rules** ([`CLAUDE.md`](CLAUDE.md)) define the architecture and the event sourcing rules the agent must follow.
-- **Hooks** ([`.claude/settings.json`](.claude/settings.json)) format every change, block edits to secrets and to the database, **block removing or renaming fields of stored events**, and run the build and tests before a task is considered done.
-- **Spec-first**: each feature starts as a spec in [`specs/`](specs) with acceptance criteria.
-- **Same quality gates for every line**: CI enforces warnings as errors, formatting, unit/integration/architecture tests, a container smoke test and secret scanning.
-
-I own the architecture and review every change.
+Stored events are a contract that outlives the code, so this is where an assistant could do the most damage with a harmless-looking rename. A hook in [`.claude/`](.claude) blocks removing or renaming any field of a stored event; [`CLAUDE.md`](CLAUDE.md) explains the event sourcing rules and the only allowed way to evolve them (add, never change).
 
 ## License
 

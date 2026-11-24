@@ -8,8 +8,6 @@ verdade: cada depósito, saque e transferência é um evento, a conta é reconst
 leem de projeções atualizadas na mesma transação. Como o histórico é o próprio dado, a API também responde
 *"qual era o saldo em 15 de outubro?"*.
 
-Pequeno de propósito: dá para ler em cerca de 15 minutos e subir com um comando.
-
 ## Como rodar
 
 Requisito: Docker.
@@ -137,16 +135,9 @@ dotnet test   # agregado em dado/quando/então, integração (API real + SQLite,
 - **Projeções síncronas.** Simples e consistentes, mas uma projeção lenta atrasa o comando. Em escala, rodariam de forma assíncrona a partir do log de eventos, com consistência eventual.
 - **SQLite.** Escolhido para o projeto rodar sem banco externo; em produção seria PostgreSQL ou um event store dedicado.
 
-## Engenharia assistida por IA
+## Trabalhando com um agente de IA
 
-Este projeto foi construído com o Claude Code sob controles explícitos de engenharia:
-
-- **Regras do projeto** ([`CLAUDE.md`](CLAUDE.md)) definem a arquitetura e as regras de event sourcing que o agente deve seguir.
-- **Hooks** ([`.claude/settings.json`](.claude/settings.json)) formatam cada alteração, bloqueiam edição de segredos e do banco, **bloqueiam remover ou renomear campos de eventos já gravados** e rodam build e testes antes de uma tarefa ser considerada pronta.
-- **Spec first**: cada funcionalidade começa como uma spec em [`specs/`](specs) com critérios de aceite.
-- **Os mesmos portões para cada linha**: o CI exige warnings como erro, formatação, testes de unidade/integração/arquitetura, smoke test do contêiner e varredura de segredos.
-
-A arquitetura é minha e eu reviso cada alteração.
+Eventos gravados são um contrato que sobrevive ao código, e é aqui que um assistente faria mais estrago com uma renomeação de aparência inofensiva. Um hook em [`.claude/`](.claude) bloqueia remover ou renomear qualquer campo de evento gravado; o [`CLAUDE.md`](CLAUDE.md) explica as regras de event sourcing e o único jeito permitido de evoluí-las (acrescentar, nunca mudar).
 
 ## Licença
 
